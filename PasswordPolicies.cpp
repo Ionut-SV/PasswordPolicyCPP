@@ -1,7 +1,7 @@
-#include<iostream>
-#include<string>
-#include<vector>
-#include<cstdint>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdint>
 #include <algorithm>
 
 using namespace std;
@@ -27,7 +27,7 @@ class LengthPolicy : public Policy{
         }
         void check(const string & password){
             isChecked=false;
-            if((password.size()>=minLength) && (password.size()<=maxLength))
+            if ((password.size() >= minLength) && (password.size() <= maxLength))
                 isChecked   =  true;
         }
 };
@@ -41,24 +41,24 @@ class ClassPolicy : public Policy{
         void check(const string &password){
         int count=0;
         isChecked=false;
-        int l=0,c=0,L=0,other=0;
-            for(int i=0;i<password.size();i++){
-                if(islower(password[i]))
+        int l=0, c=0, L=0, other=0;
+            for(int i = 0; i<password.size(); i++){
+                if (islower(password[i]))
                     l++;
-                 if(isupper(password[i]))
+                 if (isupper(password[i]))
                     L++;
                  if (isdigit(password[i]))
                     c++;
-                if(!isalnum(password[i]))    
+                if (!isalnum(password[i]))    
                     other++;
             }    
-            if(l>0)
+            if (l > 0)
                 count++;
-            if(c>0)
+            if (c > 0)
                 count++;
-            if(L>0)
+            if (L >0)
                 count++;
-            if(other>0)
+            if (other > 0)
                 count++;
             
                 
@@ -71,7 +71,7 @@ class ClassPolicy : public Policy{
     
 };    
 
-class IncludePolicy:public Policy{
+class IncludePolicy : public Policy{
     private:
         char characterType;
     public:
@@ -79,20 +79,20 @@ class IncludePolicy:public Policy{
         }
         void check(const string& password){
             isChecked=false;
-            for(int i=0;i<password.size();i++){
-                if(islower(characterType)   && islower(password[i]))
+            for(int i = 0; i<password.size(); i++){
+                if (islower(characterType)   && islower(password[i]))
+                    isChecked = true;
+                else    if (isupper(characterType) && islower(password[i]))
+                    isChecked = true;
+                else    if (isdigit(characterType) && isdigit(password[i]))
                     isChecked=true;
-                else    if(isupper(characterType)   &&  islower(password[i]))
-                    isChecked=true;
-                else    if(isdigit(characterType)   &&  isdigit(password[i]))
-                    isChecked=true;
-                else    if(!isalnum(characterType)  &&  !isalnum(password[i]))
+                else    if (!isalnum(characterType) && !isalnum(password[i]))
                     isChecked=true;
             }  
         }    
 };
 
-class NotIncludePolicy:public Policy{
+class NotIncludePolicy : public Policy{
     private:
         char characterType;
     public:
@@ -100,36 +100,36 @@ class NotIncludePolicy:public Policy{
         }
         void check(const string& password){
             isChecked=true;
-            for(int i=0;i<password.size();i++){
-                if(islower(characterType)   && islower(password[i]))
-                    isChecked=false;
-                  else  if(isupper(characterType)   &&  islower(password[i]))
-                    isChecked=false;
-                   else if(isdigit(characterType)   &&  isdigit(password.at(i)))
-                    isChecked=false;
-                    else    if(!isalnum(characterType)  &&  !isalnum(password[i]))
-                    isChecked=false;
+            for(int i = 0; i<password.size(); i++){
+                if(islower(characterType) && islower(password[i]))
+                    isChecked = false;
+                  else  if (isupper(characterType) && islower(password[i]))
+                    isChecked = false;
+                   else if(isdigit(characterType) && isdigit(password.at(i)))
+                    isChecked = false;
+                    else    if(!isalnum(characterType) && !isalnum(password[i]))
+                    isChecked = false;
             } 
 
         }    
 };
 
-class RepetitionPolicy:public Policy{
+class RepetitionPolicy : public Policy{
     private:
         uint16_t maxCount;
     public:
-        RepetitionPolicy(uint16_t maxc):maxCount(maxc){
+        RepetitionPolicy (uint16_t maxc): maxCount(maxc){
         }
         void check(const string & password){
             int rep=0;
             isChecked = true;
-            for(int i=0;i<password.size()-1;i++){
-                    if (password[i]==password[i+1])
+            for(int i = 0; i<password.size()-1; i++){
+                    if (password[i] == password[i+1])
                         rep++;
                     else{
-                        if(rep+1>maxCount)
+                        if (rep+1 > maxCount)
                             isChecked = false;
-                        rep=0;    
+                        rep = 0;    
                         }
             }            
 
@@ -140,19 +140,19 @@ class ConsecutivePolicy :public Policy{
     private:
         uint16_t maxCount;
     public:
-        ConsecutivePolicy (uint16_t maxc):maxCount(maxc){
+        ConsecutivePolicy (uint16_t maxc): maxCount(maxc){
         }
         void check(const string& password){
-            int rep=0;
-            isChecked=true;
-            for(int i=0;i<password.size()-1;i++){
+            int rep = 0;
+            isChecked = true;
+            for(int i = 0; i<password.size()-1; i++){
                
-                    if (password[i]+1==password[i+1])
+                    if (password[i]+1 == password[i+1])
                         rep++;
                     else{
-                        if (rep+1>maxCount)
-                            isChecked=false;
-                        rep=0;
+                        if (rep+1 > maxCount)
+                            isChecked = false;
+                        rep = 0;
                     }
 
                 
@@ -160,32 +160,32 @@ class ConsecutivePolicy :public Policy{
         }
 };
 
-string checkPassword(string password,vector <Policy*> v){
-    int bec=0;
-    for(int i=0;i<v.size();i++){
+string checkPassword(string password, vector <Policy*> v){
+    int bec = 0;
+    for(int i = 0; i < v.size(); i++){
         v[i]->check(password); 
     }    
     for(int i=0;i<v.size();i++){    
         if (v[i]->getCheck() == false)
             bec++;
     }
-    if (bec==0)
+    if (bec == 0)
         return "OK";
     return "NOK";    
 }
 
 int main(){
-    int n,min,max;
+    int n, min, max;
     string password;
     string policy;
     char car;
-    cin>>n;
-     vector < Policy *  > v;
-    for(int i=0;i<n;i++){
-        cin>>policy;
-        if(policy   ==  "length"){
-            cin>>min;
-            if(!scanf("%d",&max))
+    cin >> n;
+     vector <Policy*> v;
+    for(int i = 0; i < n; i++){
+        cin >> policy;
+        if(policy == "length"){
+            cin >> min;
+            if(!scanf("%d", &max))
                 v.push_back(new LengthPolicy(min));
             else
                 v.push_back(new LengthPolicy(min,max));
@@ -193,30 +193,30 @@ int main(){
         }
         
         if(policy == "class"){
-            cin>>min;
+            cin >> min;
             v.push_back(new ClassPolicy(min));
         }
         
         if(policy == "include"){
-            cin>>car;
+            cin >> car;
             v.push_back(new IncludePolicy(car));
         }
         if(policy == "ninclude"){
-            cin>>car;
+            cin >> car;
             v.push_back(new NotIncludePolicy(car));
         }
         if(policy == "repetition"){
-            cin>>min;
+            cin >> min;
             v.push_back(new RepetitionPolicy(min));
         }
         if(policy == "consecutive"){
-            cin>>min;
+            cin >> min;
             v.push_back(new ConsecutivePolicy(min));
         }
     }
     
-    while(cin>>password){
-            cout<<checkPassword(password,v)<<'\n';
+    while(cin >> password){
+            cout << checkPassword(password,v) << '\n';
             
     }
     return 0;
